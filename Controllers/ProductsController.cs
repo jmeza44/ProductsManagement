@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ProductsManagement.Data.Models;
 using ProductsManagement.Data.Services;
 using ProductsManagement.Data.ViewModels;
 
@@ -9,8 +10,8 @@ namespace ProductsManagement.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly ProductsService _productsService;
-        public ProductsController(ProductsService productService)
+        private readonly IProductsService _productsService;
+        public ProductsController(IProductsService productService)
         {
             _productsService = productService;
         }
@@ -23,9 +24,13 @@ namespace ProductsManagement.Controllers
         }
 
         [HttpGet("GetByCode")]
-        public IActionResult GetProductByCode([FromQuery]string code)
+        public IActionResult GetProductByCode([FromQuery]int code)
         {
             var product = _productsService.GetProductByCode(code);
+            if (product == null)
+            {
+                return NotFound();
+            }
             return Ok(product);
         }
         [HttpGet("GetByDescription")]
@@ -43,9 +48,13 @@ namespace ProductsManagement.Controllers
         }
 
         [HttpPut]
-        public IActionResult UpdateProduct([FromBody]ProductVM product)
+        public IActionResult UpdateProduct([FromQuery]int id, [FromBody]ProductVM product)
         {
-            _productsService.UpdateProduct(product);
+            var _product = _productsService.UpdateProduct(id, product);
+            if (_product == null)
+            {
+                return NotFound();
+            }
             return Ok();
         }
     }
