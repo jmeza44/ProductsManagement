@@ -5,7 +5,7 @@ namespace ProductsManagement.Data.Services
 {
     public interface IProductsService
     {
-        void AddProduct(ProductVM product);
+        Product AddProduct(ProductVM product);
         List<Product> GetAllProducts();
         Product GetProductByCode(int id);
         List<Product> GetProductsByDescription(string description);

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProductsManagement.Data.Models;
 using ProductsManagement.Data.Services;
 using ProductsManagement.Data.ViewModels;
+using ProductsManagement.Utilities;
 
 namespace ProductsManagement.Controllers
 {
@@ -20,42 +21,99 @@ namespace ProductsManagement.Controllers
         public IActionResult GetAllProducts()
         {
             var products = _productsService.GetAllProducts();
-            return Ok(products);
+            return Ok(new OperationResult<List<Product>>
+            {
+                Message = "Success",
+                Description = $"{products.Count()} Product(s) found",
+                Result = products
+            });
         }
 
-        [HttpGet("GetByCode")]
-        public IActionResult GetProductByCode([FromQuery]int code)
+        [HttpGet("GetById")]
+        public IActionResult GetProductByCode([FromQuery] int? id)
         {
-            var product = _productsService.GetProductByCode(code);
+            if (!id.HasValue)
+            {
+                return BadRequest(new OperationResult<string>
+                {
+                    Message = "Error",
+                    Description = "Missing id on query params"
+                });
+            }
+            var product = _productsService.GetProductByCode(id.Value);
             if (product == null)
             {
-                return NotFound();
+                return NotFound(new OperationResult<string>
+                {
+                    Message = "Error",
+                    Description = $"Id {id} couldn't be found"
+                });
             }
-            return Ok(product);
+            return Ok(new OperationResult<Product>
+            {
+                Message = "Success",
+                Description = $"Product with id {id} found",
+                Result = product
+            });
         }
         [HttpGet("GetByDescription")]
-        public IActionResult GetProductByDescription([FromQuery]string description)
+        public IActionResult GetProductByDescription([FromQuery] string description)
         {
+            if (String.IsNullOrEmpty(description))
+            {
+                return BadRequest(new OperationResult<List<Product>>
+                {
+                    Message = "Error",
+                    Description = "Missing description on query params"
+                });
+            }
             var products = _productsService.GetProductsByDescription(description);
-            return Ok(products);
+            return Ok(new OperationResult<List<Product>>
+            {
+                Message = "Success",
+                Description = $"{products.Count()} Product(s) found",
+                Result = products
+            });
         }
 
         [HttpPost]
-        public IActionResult AddProduct([FromBody]ProductVM product)
+        public IActionResult AddProduct([FromBody] ProductVM product)
         {
-            _productsService.AddProduct(product);
-            return Ok();
+            var _product = _productsService.AddProduct(product);
+            return Ok(new OperationResult<Product>
+            {
+                Message = "Success",
+                Description = "Product added properly",
+                Result = _product
+            });
         }
 
         [HttpPut]
-        public IActionResult UpdateProduct([FromQuery]int id, [FromBody]ProductVM product)
+        public IActionResult UpdateProduct([FromQuery] int? id, [FromBody] ProductVM product)
         {
-            var _product = _productsService.UpdateProduct(id, product);
+            if (!id.HasValue)
+            {
+                return BadRequest(new OperationResult<string>
+                {
+                    Message = "Error",
+                    Description = "Missing id on query params"
+                });
+            }
+            var _product = _productsService.UpdateProduct(id.Value, product);
             if (_product == null)
             {
-                return NotFound();
+                return NotFound(new OperationResult<string>
+                {
+                    Message = "Error",
+                    Description = $"Id {id} couldn't be found"
+                });
             }
-            return Ok();
+            return Ok(new OperationResult<Product>
+            {
+                Message = "Success",
+                Description = "Product updated properly",
+                Result = _product
+            });
         }
     }
 }
