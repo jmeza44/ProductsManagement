@@ -31,7 +31,7 @@ namespace ProductsManagement.Data.Services
             return products;
         }
 
-        public void AddProduct(ProductVM product)
+        public Product AddProduct(ProductVM product)
         {
             Product _product = new Product()
             {
@@ -41,13 +41,14 @@ namespace ProductsManagement.Data.Services
                 BoughtDate = product.BoughtDate,
                 State = product.State,
             };
-            _context.Add(_product);
+            var _productAdded = _context.Add(_product);
             _context.SaveChanges();
+            return _productAdded.Entity;
         }
 
         public Product UpdateProduct(int id, ProductVM product)
         {
-            Product _product = _context.Products.FirstOrDefault(p => p.Id == id);
+            var _product = _context.Products.FirstOrDefault(p => p.Id == id);
             if (_product != null)
             {
                 _product.Description = product.Description;
