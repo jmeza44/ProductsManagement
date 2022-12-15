@@ -2,7 +2,15 @@
 {
     public class ProductVM
     {
-        public string Code { get; set; }
+        public ProductVM(string description, string type, double value, DateTime boughtDate, string state)
+        {
+            Description = description;
+            Type = type;
+            Value = value;
+            BoughtDate = boughtDate;
+            State = state;
+        }
+
         public string Description { get; set; }
         public string Type { get; set; }
         public double Value { get; set; }

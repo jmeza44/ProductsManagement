@@ -9,7 +9,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ProductsManagement.Data.AppDbContext>(opt => opt.UseSqlServer(connectionString));
-builder.Services.AddTransient<ProductsService>();
+builder.Services.AddScoped<IProductsService, ProductsService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
