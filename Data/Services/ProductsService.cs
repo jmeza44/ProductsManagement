@@ -12,53 +12,55 @@ namespace ProductsManagement.Data.Services
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public List<Product> GetAllProducts()
+        public List<ProductWithIdVM> GetAllProducts()
         {
-            var products = _context.Products.ToList();
-            return products;
+            var products = _context.Products.Select(p => (ProductWithIdVM)p);
+            return products.ToList();
         }
 
-        public Product GetProductByCode(int id)
+        public ProductWithIdVM GetProductById(int id)
         {
             var product = _context.Products.FirstOrDefault(x => x.Id == id);
-            return product;
+            return (ProductWithIdVM)product;
         }
 
-        public List<Product> GetProductsByDescription(string description)
+        public List<ProductWithIdVM> GetProductsByDescription(string description)
         {
             var products = _context.Products.Where(p => p.Description.ToLower().Contains(description.ToLower()))
+                .Select(p => (ProductWithIdVM)p)
                 .ToList();
+
             return products;
         }
 
-        public Product AddProduct(ProductVM product)
+        public ProductWithIdVM AddProduct(ProductVM product)
         {
-            Product _product = new Product()
-            {
-                Description = product.Description,
-                Type = product.Type,
-                Value = product.Value,
-                BoughtDate = product.BoughtDate,
-                State = product.State,
-            };
+            var _product = (Product)product;
             var _productAdded = _context.Add(_product);
             _context.SaveChanges();
-            return _productAdded.Entity;
+            return (ProductWithIdVM)_productAdded.Entity;
         }
 
-        public Product UpdateProduct(int id, ProductVM product)
+        public ProductWithIdVM UpdateProduct(int id, ProductVM product)
         {
             var _product = _context.Products.FirstOrDefault(p => p.Id == id);
             if (_product != null)
             {
-                _product.Description = product.Description;
-                _product.Type = product.Type;
-                _product.Value = product.Value;
-                _product.BoughtDate = product.BoughtDate;
-                _product.State = product.State;
+                _product = (Product)product;
                 _context.SaveChanges();
             }
-            return _product;
+            return (ProductWithIdVM)_product;
+        }
+
+        public ProductWithIdVM DeleteProduct(int id)
+        {
+            var _product = _context.Products.FirstOrDefault(p => p.Id == id);
+            if (_product != null)
+            {
+                _context.Products.Remove(_product);
+                _context.SaveChanges();
+            }
+            return (ProductWithIdVM)_product;
         }
     }
 }
