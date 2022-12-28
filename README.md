@@ -1,3 +1,16 @@
+# Installation
+
+1. On any folder folder:
+
+`git clone https://github.com/jmeza44/ProductsManagement.git`
+
+2. Open on Visual Studio and modify the `appsettings.json` file (`secrets.json` if you prefer):
+
+````json
+"DefaultConnectionString": "Your_Connection_String"
+```
+3. Run the application (Automatic migrations)
+
 # Products API - Code Challenge 🐱‍👤
 
 Debes crear una aplicación en ASP.NET Web API (Una API REST, no se necesita crear el Front-End, solo el Back-End y las APIs) que nos permita registrar, modificar, eliminar y consultar productos, teniendo en cuenta las siguientes premisas:
