@@ -6,9 +6,10 @@
 
 2. Open on Visual Studio and modify the `appsettings.json` file (`secrets.json` if you prefer):
 
-````json
+```json
 "DefaultConnectionString": "Your_Connection_String"
 ```
+
 3. Run the application (Automatic migrations)
 
 # Products API - Code Challenge 🐱‍👤
