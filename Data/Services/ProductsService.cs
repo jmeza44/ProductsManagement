@@ -46,7 +46,11 @@ namespace ProductsManagement.Data.Services
             var _product = _context.Products.FirstOrDefault(p => p.Id == id);
             if (_product != null)
             {
-                _product = (Product)product;
+                _product.Description = product.Description;
+                _product.Type = product.TypeAsInt;
+                _product.Value = product.Value;
+                _product.BoughtDate = product.BoughtDate;
+                _product.State = product.StateAsBool;
                 _context.SaveChanges();
             }
             return (ProductWithIdVM)_product;

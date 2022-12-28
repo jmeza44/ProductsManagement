@@ -5,7 +5,7 @@ namespace ProductsManagement.Data.ViewModels
 {
     public class ProductVM
     {
-        private static string[] ProductTypes = { "Property", "Vehicle", "Land", "Apartment" };
+        private string[] ProductTypes = { "Property", "Vehicle", "Land", "Apartment" };
 
         [Required(ErrorMessage = "A Description is required")]
         public string Description { get; set; }
@@ -27,15 +27,25 @@ namespace ProductsManagement.Data.ViewModels
             ErrorMessage = "Product State must match with one of the following values Active|Inactive")]
         public string State { get; set; }
 
+        public int TypeAsInt
+        {
+            get => Array.IndexOf(ProductTypes, Type);
+        }
+
+        public bool StateAsBool
+        {
+            get => State == "Active";
+        }
+
         public static explicit operator Product(ProductVM product)
         {
             return new Product()
             {
                 Description = product.Description,
-                Type = Array.IndexOf(ProductTypes, product.Type),
+                Type = product.TypeAsInt,
                 Value = product.Value,
                 BoughtDate = product.BoughtDate,
-                State = product.State == "Active",
+                State = product.StateAsBool,
             };
         }
     }

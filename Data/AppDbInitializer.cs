@@ -1,4 +1,5 @@
-﻿using ProductsManagement.Data.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using ProductsManagement.Data.Models;
 
 namespace ProductsManagement.Data
 {
@@ -9,6 +10,11 @@ namespace ProductsManagement.Data
             using (var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetService<AppDbContext>();
+
+                if (context.Database.EnsureCreated())
+                {
+                    context.Database.Migrate();
+                }
 
                 if (!context.Products.Any())
                 {
